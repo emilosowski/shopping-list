@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping list</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="list-container">
+        <h1 class="list-title">Shopping List</h1>
+        <div class="list-menu">
+          Menu
+          <button class="nav__btn-add">
+            <ion-icon name="add-circle-outline" class="btn-add"></ion-icon>
+          </button>
+          <button class="nav__btn-add">
+            <ion-icon name="filter-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="form_container hidden">
+          <form class="form" name="addProduct">
+            <label>Product</label>
+            <input
+            class="form_product"
+              required
+              name="product"
+              type="text"
+              placeholder="Product
+              name"
+              value="test"
+            />
+            <label>Quantity</label>
+            <input class='form_quantity' required name="quantity" value="1" type="number" />
+            <label>Price</label>
+            <input class='form_price' name="price" value="0" type="number" />
+            <input type="hidden" id="form-id" name="form-id" value="" />
+            <input type="hidden" id="form-bought" name="bought" value="" />
+            <button class="form__btn-add">
+              <ion-icon name="save-outline"></ion-icon>
+              <span>ADD</span>
+            </button>
+            <button class="form__btn-save hidden">
+              <ion-icon name="save-outline"></ion-icon>
+              <span>SAVE</span>
+            </button>
+            <button class="form__btn-close">
+              <ion-icon name="close-circle-outline"></ion-icon>
+            </button>
+          </form>
+        </div>
+        <div class="list">
+        
+          <div class="list__row">
+            <!-- <div class="list__type"></div>
+            <button class="list__icon" data-id="">
+              <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+            </button>
+            <div class="list_product">Ziemniaki</div>
+            <div class="list_quantity">5</div>
+            <div class="list_price">10</div>
+            <button class="list__edit-item"  data-id="">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </button> -->
+          </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
