@@ -2,10 +2,9 @@
 
 const form = document.querySelector(".form");
 const formContainer = document.querySelector(".form_container");
-const btnOpenForm = document.querySelector(".nav__btn-add");
-const btnCloseForm = document.querySelector(".form__btn-close");
 const btnAddProduct = document.querySelector(".form__btn-add");
 const btnSaveProduct = document.querySelector(".form__btn-save");
+const btnSort = document.querySelector(".nav__btn-sort");
 const inputProduct = document.querySelector(".form_product");
 const inputQuantity = document.querySelector(".form_quantity");
 const inputPrice = document.querySelector(".form_price");
@@ -13,6 +12,7 @@ const list = document.querySelector(".list");
 const listRow = document.querySelector(".list__row");
 const inputId = document.getElementById("form-id");
 let inputBought = document.getElementById("form-bought");
+let clicks = 0;
 
 class ShoppingList {
   // id ostatnie 10 cyfr daty
@@ -31,29 +31,18 @@ class App {
 
   constructor() {
     // this._getLocalStorage();
-    btnOpenForm.addEventListener("click", this._openForm);
-    btnCloseForm.addEventListener("click", this._closeForm);
+
     btnAddProduct.addEventListener("click", this._addNewProduct.bind(this));
     btnSaveProduct.addEventListener("click", this._saveProduct.bind(this));
     list.addEventListener("click", this._editProduct.bind(this));
     list.addEventListener("click", this._bought.bind(this));
     list.addEventListener("click", this._removeProduct.bind(this));
+    btnSort.addEventListener("click", this._sortList.bind(this));
     let products;
   }
 
   _clearForm() {
     inputProduct.value = inputQuantity.value = inputPrice.value = "";
-  }
-
-  _openForm() {
-    formContainer.classList.remove("hidden");
-    btnSaveProduct.classList.add("hidden");
-    btnAddProduct.classList.remove("hidden");
-  }
-
-  _closeForm(e) {
-    e.preventDefault();
-    formContainer.classList.add("hidden");
   }
 
   _editProduct(e) {
@@ -63,8 +52,6 @@ class App {
     const product = this.#productsList.find(
       (pr) => pr.id === productEl.dataset.id
     );
-
-    formContainer.classList.remove("hidden");
 
     inputProduct.value = product.product;
     inputQuantity.value = product.quantity;
@@ -124,12 +111,11 @@ class App {
 
     this._updateProductList(this.#productsList[productsListId]);
     this._clearForm();
-    formContainer.classList.add("hidden");
-    console.log(this.#productsList);
   }
 
   _addNewProduct(e) {
     e.preventDefault();
+
     // get data from form
     const product = inputProduct.value;
     const quantity = +inputQuantity.value;
@@ -160,6 +146,7 @@ class App {
 
     // empty imputs
     this._clearForm();
+    inputProduct.focus();
 
     // set local stprage
     this._setLocalStorage();
@@ -221,6 +208,46 @@ class App {
     //   iconEl.style.color = "#000";
     //   iconType.style.backgroundColor = "#ebc801";
     // }
+  }
+
+  _sortList(e) {
+    e.preventDefault();
+    // 0 - sorted by id addition order
+    // 1 - sorted by product name ascending
+    // 2 - sorted by product name descending
+    // 3 - sorted by quantity
+    clicks++;
+    clicks === 4 ? (clicks = 0) : (clicks = clicks);
+    let products;
+    if (clicks === 0) {
+      products = this.#productsList.sort((a, b) => a.id - b.id);
+    }
+    if (clicks === 1) {
+      products = this.#productsList.sort((a, b) =>
+        a.product.toUpperCase() < b.product.toUpperCase()
+          ? 1
+          : a.product.toUpperCase() > b.product.toUpperCase()
+          ? -1
+          : 0
+      );
+    }
+    if (clicks === 2) {
+      products = this.#productsList.sort((a, b) =>
+        a.product.toUpperCase() < b.product.toUpperCase()
+          ? -1
+          : a.product.toUpperCase() > b.product.toUpperCase()
+          ? 1
+          : 0
+      );
+    }
+    if (clicks === 3) {
+      products = this.#productsList.sort((a, b) => b.quantity - a.quantity);
+    }
+
+    // console.log(sortedList);
+    console.log(products);
+    this._updateProductList();
+    // sorted = !sorted;
   }
 
   _setLocalStorage() {

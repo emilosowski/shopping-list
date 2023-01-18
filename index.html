@@ -22,60 +22,61 @@
         <h1 class="list-title">Shopping List</h1>
         <div class="list-menu">
           Menu
-          <button class="nav__btn-add">
-            <ion-icon name="add-circle-outline" class="btn-add"></ion-icon>
-          </button>
-          <button class="nav__btn-add">
+          <button class="btn nav__btn-sort">
             <ion-icon name="filter-outline"></ion-icon>
           </button>
         </div>
-        <div class="form_container hidden">
+
+        <div class="form_container">
+          <div>
+
+            <ion-icon name="basket-outline" class="basket_icon"></ion-icon>
+          </div>
           <form class="form" name="addProduct">
             <label>Product</label>
-            <input
-            class="form_product"
-              required
-              name="product"
-              type="text"
-              placeholder="Product
-              name"
-              value="test"
-            />
             <label>Quantity</label>
-            <input class='form_quantity' required name="quantity" value="1" type="number" />
             <label>Price</label>
-            <input class='form_price' name="price" value="0" type="number" />
+            <div>
+            </div>
+            <div>
+            </div>
+              <input
+                class="form_product"
+                required
+                name="product"
+                type="text"
+                placeholder="Product
+              name"
+                value="test"
+              />
+            
+              
+              <input
+                class="form_quantity"
+                required
+                name="quantity"
+                value="1"
+                type="number"
+              />
+            
+              
+              <input class="form_price" name="price" value="0" type="number" />
+            
             <input type="hidden" id="form-id" name="form-id" value="" />
             <input type="hidden" id="form-bought" name="bought" value="" />
-            <button class="form__btn-add">
+            <button class="btn form__btn form__btn-add">
+              <ion-icon name="add-outline"></ion-icon>
+
+              
+            </button>
+            <button class="btn form__btn form__btn-save hidden">
               <ion-icon name="save-outline"></ion-icon>
-              <span>ADD</span>
-            </button>
-            <button class="form__btn-save hidden">
-              <ion-icon name="save-outline"></ion-icon>
-              <span>SAVE</span>
-            </button>
-            <button class="form__btn-close">
-              <ion-icon name="close-circle-outline"></ion-icon>
-            </button>
+             
+            </button
           </form>
         </div>
         <div class="list">
-        
-          <div class="list__row">
-            <!-- <div class="list__type"></div>
-            <button class="list__icon" data-id="">
-              <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-            </button>
-            <div class="list_product">Ziemniaki</div>
-            <div class="list_quantity">5</div>
-            <div class="list_price">10</div>
-            <button class="list__edit-item"  data-id="">
-              <ion-icon name="pencil-outline"></ion-icon>
-            </button> -->
-          </div>
-          
-          </div>
+          <div class="list__row"></div>
         </div>
       </div>
     </div>
