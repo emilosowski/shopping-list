@@ -101,13 +101,13 @@ html {
 .form_container {
   display: grid;
   grid-template-columns: 2fr 14fr;
+  align-items: flex-start;
   width: 100%;
   padding: 1rem 2rem;
   background-color: #ebc801;
 }
 
 .form_container label {
-  display: block;
   font-size: 1rem;
 }
 

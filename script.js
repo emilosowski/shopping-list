@@ -2,17 +2,28 @@
 
 const form = document.querySelector(".form");
 const formContainer = document.querySelector(".form_container");
-const btnAddProduct = document.querySelector(".form__btn-add");
-const btnSaveProduct = document.querySelector(".form__btn-save");
+const btnForm = document.querySelector(".form__btn");
 const btnSort = document.querySelector(".nav__btn-sort");
+const btnClear = document.querySelector(".nav__btn-clear");
 const inputProduct = document.querySelector(".form_product");
 const inputQuantity = document.querySelector(".form_quantity");
 const inputPrice = document.querySelector(".form_price");
 const list = document.querySelector(".list");
 const listRow = document.querySelector(".list__row");
 const inputId = document.getElementById("form-id");
+const listCost = document.querySelector(".list_cost");
 let inputBought = document.getElementById("form-bought");
 let clicks = 0;
+const sortDesc = [
+  "addition",
+  "products ascending",
+  "products descending",
+  "quantity",
+];
+const sortDescription = document.querySelector(".sort_description");
+let editButton = 0;
+let icon;
+let cost = 0;
 
 class ShoppingList {
   // id ostatnie 10 cyfr daty
@@ -30,15 +41,37 @@ class App {
   #productsList = [];
 
   constructor() {
-    // this._getLocalStorage();
+    this._getLocalStorage();
 
-    btnAddProduct.addEventListener("click", this._addNewProduct.bind(this));
-    btnSaveProduct.addEventListener("click", this._saveProduct.bind(this));
+    btnForm.addEventListener("click", this._buttonFunction.bind(this));
+    btnClear.addEventListener("click", this.reset);
     list.addEventListener("click", this._editProduct.bind(this));
     list.addEventListener("click", this._bought.bind(this));
     list.addEventListener("click", this._removeProduct.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
     let products;
+    this.buttonSign();
+  }
+
+  _calculateCost() {
+    this.#productsList.forEach(
+      (prod) => (cost = cost + prod.quantity * prod.price)
+    );
+    console.log(cost);
+    listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
+  }
+
+  buttonSign() {
+    btnForm.innerHTML = "";
+    editButton === 0
+      ? (icon = `<ion-icon name="add-outline"></ion-icon>`)
+      : (icon = `<ion-icon name="save-outline"></ion-icon>`);
+    btnForm.insertAdjacentHTML("afterbegin", icon);
+  }
+
+  _buttonFunction(e) {
+    e.preventDefault();
+    editButton === 0 ? this._addNewProduct() : this._saveProduct();
   }
 
   _clearForm() {
@@ -58,8 +91,9 @@ class App {
     inputPrice.value = product.price;
     inputId.value = product.id;
     inputBought = product.bought;
-    btnAddProduct.classList.add("hidden");
-    btnSaveProduct.classList.remove("hidden");
+
+    editButton = 1;
+    this.buttonSign();
   }
 
   _removeProduct(e) {
@@ -75,15 +109,14 @@ class App {
     this._updateProductList();
   }
 
-  _saveProduct(e) {
-    e.preventDefault();
+  _saveProduct() {
+    // e.preventDefault();
     // get data from form
     const product = inputProduct.value;
     const quantity = +inputQuantity.value;
     const price = +inputPrice.value;
     const id = inputId.value;
     const bought = inputBought;
-    console.log(this.#productsList);
     // check if data is valid
     if (
       !product ||
@@ -105,17 +138,15 @@ class App {
     this.#productsList[productsListId].price = price;
     this.#productsList[productsListId].bought = bought;
 
-    // console.log(this.#productsList);
-
     // render product on list
 
     this._updateProductList(this.#productsList[productsListId]);
     this._clearForm();
+    editButton = 0;
+    this.buttonSign();
   }
 
-  _addNewProduct(e) {
-    e.preventDefault();
-
+  _addNewProduct() {
     // get data from form
     const product = inputProduct.value;
     const quantity = +inputQuantity.value;
@@ -150,7 +181,6 @@ class App {
 
     // set local stprage
     this._setLocalStorage();
-    // console.log(this.#productsList);
   }
 
   _renderProductList(products) {
@@ -195,19 +225,11 @@ class App {
     product.bought === true
       ? (product.bought = false)
       : (product.bought = true);
-    console.log(product.bought);
+
     const productName = iconEl.nextElementSibling;
     const iconType = iconEl.previousSibling.previousSibling;
 
     this._updateProductList();
-    // if (product.bought) {
-    //   productName.classList.add("line-through");
-    //   iconEl.style.color = "#7fff90";
-    //   iconType.style.backgroundColor = "#7fff90";
-    // } else {
-    //   iconEl.style.color = "#000";
-    //   iconType.style.backgroundColor = "#ebc801";
-    // }
   }
 
   _sortList(e) {
@@ -244,10 +266,10 @@ class App {
       products = this.#productsList.sort((a, b) => b.quantity - a.quantity);
     }
 
-    // console.log(sortedList);
-    console.log(products);
     this._updateProductList();
-    // sorted = !sorted;
+
+    sortDescription.innerHTML = "";
+    sortDescription.insertAdjacentHTML("afterbegin", sortDesc[clicks]);
   }
 
   _setLocalStorage() {
@@ -256,7 +278,6 @@ class App {
 
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("products"));
-    console.log(data);
 
     if (!data) return;
     this.#productsList = data;
@@ -273,3 +294,4 @@ class App {
 }
 
 const app = new App();
+app._calculateCost();
