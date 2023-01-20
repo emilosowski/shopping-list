@@ -5,6 +5,9 @@ const formContainer = document.querySelector(".form_container");
 const btnForm = document.querySelector(".form__btn");
 const btnSort = document.querySelector(".nav__btn-sort");
 const btnClear = document.querySelector(".nav__btn-clear");
+const btnTrashYes = document.querySelector(".trash_confirm_yes");
+const btnTrashNo = document.querySelector(".trash_confirm_no");
+const trashConf = document.querySelector(".trash_confirm");
 const inputProduct = document.querySelector(".form_product");
 const inputQuantity = document.querySelector(".form_quantity");
 const inputPrice = document.querySelector(".form_price");
@@ -44,7 +47,9 @@ class App {
     this._getLocalStorage();
 
     btnForm.addEventListener("click", this._buttonFunction.bind(this));
-    btnClear.addEventListener("click", this.reset);
+    btnClear.addEventListener("click", this.trashConfirm);
+    btnTrashYes.addEventListener("click", this.reset);
+    btnTrashNo.addEventListener("click", this.trashConfirm);
     list.addEventListener("click", this._editProduct.bind(this));
     list.addEventListener("click", this._bought.bind(this));
     list.addEventListener("click", this._removeProduct.bind(this));
@@ -62,6 +67,10 @@ class App {
     console.log(cost);
     listCost.innerHTML = "";
     listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
+  }
+
+  trashConfirm() {
+    trashConf.classList.toggle("hidden");
   }
 
   buttonSign() {
@@ -147,9 +156,6 @@ class App {
     this._clearForm();
     editButtonActive = false;
     this.buttonSign();
-
-    // set local stprage
-    this._setLocalStorage();
   }
 
   _addNewProduct() {
@@ -225,6 +231,7 @@ class App {
     list.innerHTML = "";
     this.#productsList.forEach((prod) => this._renderProductList(prod));
     this._calculateCost();
+    this._setLocalStorage();
   }
 
   _bought(e) {
@@ -302,6 +309,7 @@ class App {
   reset() {
     localStorage.removeItem("products");
     location.reload();
+    trashConfirm();
   }
 }
 

@@ -143,4 +143,57 @@ html {
   height: 3rem;
   border: none;
   border-radius: 0.7rem;
+  grid-column: 4 / 6;
+}
+
+.trash_confirm {
+  position: absolute;
+  background-color: #dfdfdf;
+  padding: 2rem 2rem;
+  border-radius: 1rem;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.trash_confirm_btn_container {
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+  margin-top: 2rem;
+}
+
+.btn_trash_confirm {
+  width: 8rem;
+  height: 4rem;
+}
+
+.mobile_form_container {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 0;
+  }
+
+  .list-container {
+    width: 100%;
+  }
+
+  .btn {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  /* Form mobile */
+
+  .form input {
+    height: 4rem;
+  }
+
+  .form__btn {
+    height: 4rem;
+  }
 }
