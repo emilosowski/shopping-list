@@ -45,6 +45,10 @@ html {
   align-items: center;
 }
 
+.list_cost {
+  font-size: 1.6rem;
+}
+
 .btn {
   cursor: pointer;
   width: 3.2rem;

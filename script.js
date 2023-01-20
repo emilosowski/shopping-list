@@ -21,7 +21,7 @@ const sortDesc = [
   "quantity",
 ];
 const sortDescription = document.querySelector(".sort_description");
-let editButton = 0;
+let editButtonActive = false;
 let icon;
 let cost = 0;
 
@@ -51,19 +51,22 @@ class App {
     btnSort.addEventListener("click", this._sortList.bind(this));
     let products;
     this.buttonSign();
+    this._calculateCost();
   }
 
   _calculateCost() {
+    cost = 0;
     this.#productsList.forEach(
       (prod) => (cost = cost + prod.quantity * prod.price)
     );
     console.log(cost);
+    listCost.innerHTML = "";
     listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
   }
 
   buttonSign() {
     btnForm.innerHTML = "";
-    editButton === 0
+    !editButtonActive
       ? (icon = `<ion-icon name="add-outline"></ion-icon>`)
       : (icon = `<ion-icon name="save-outline"></ion-icon>`);
     btnForm.insertAdjacentHTML("afterbegin", icon);
@@ -71,7 +74,7 @@ class App {
 
   _buttonFunction(e) {
     e.preventDefault();
-    editButton === 0 ? this._addNewProduct() : this._saveProduct();
+    !editButtonActive ? this._addNewProduct() : this._saveProduct();
   }
 
   _clearForm() {
@@ -92,7 +95,7 @@ class App {
     inputId.value = product.id;
     inputBought = product.bought;
 
-    editButton = 1;
+    editButtonActive = true;
     this.buttonSign();
   }
 
@@ -142,8 +145,11 @@ class App {
 
     this._updateProductList(this.#productsList[productsListId]);
     this._clearForm();
-    editButton = 0;
+    editButtonActive = false;
     this.buttonSign();
+
+    // set local stprage
+    this._setLocalStorage();
   }
 
   _addNewProduct() {
@@ -181,6 +187,8 @@ class App {
 
     // set local stprage
     this._setLocalStorage();
+
+    this._calculateCost();
   }
 
   _renderProductList(products) {
@@ -207,12 +215,16 @@ class App {
     <ion-icon name="trash-outline" ></ion-icon>
     </div>`;
 
-    list.insertAdjacentHTML("afterbegin", html);
+    list.insertAdjacentHTML(
+      `${!products.bought ? "afterbegin" : "beforeend"}`,
+      html
+    );
   }
 
   _updateProductList(products) {
     list.innerHTML = "";
     this.#productsList.forEach((prod) => this._renderProductList(prod));
+    this._calculateCost();
   }
 
   _bought(e) {
@@ -294,4 +306,3 @@ class App {
 }
 
 const app = new App();
-app._calculateCost();
