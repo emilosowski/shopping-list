@@ -22,10 +22,13 @@
         <h1 class="list-title">Shopping List</h1>
         <div class="list-menu">
           <div class="list_cost">Cost:</div>
-          <div>
+          <div class="list_menu_btns">
             <span class="sort_description"></span>
             <button class="btn nav__btn-sort">
               <ion-icon name="filter-outline"></ion-icon>
+            </button>
+            <button class="btn nav__btn-share">
+              <ion-icon name="share-social-outline"></ion-icon>
             </button>
             <button class="btn nav__btn-clear">
               <ion-icon name="trash-outline"></ion-icon>
@@ -50,7 +53,7 @@
               name="quantity"
               type="number"
             />
-            <input class="form_price" name="price" value="0" type="number" />
+            <input class="form_price" name="price" type="number" />
 
             <input type="hidden" id="form-id" name="form-id" value="" />
             <input type="hidden" id="form-bought" name="bought" value="" />

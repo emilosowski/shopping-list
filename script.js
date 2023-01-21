@@ -4,6 +4,7 @@ const form = document.querySelector(".form");
 const formContainer = document.querySelector(".form_container");
 const btnForm = document.querySelector(".form__btn");
 const btnSort = document.querySelector(".nav__btn-sort");
+const btnShare = document.querySelector(".nav__btn-share");
 const btnClear = document.querySelector(".nav__btn-clear");
 const btnTrashYes = document.querySelector(".trash_confirm_yes");
 const btnTrashNo = document.querySelector(".trash_confirm_no");
@@ -47,6 +48,7 @@ class App {
     this._getLocalStorage();
 
     btnForm.addEventListener("click", this._buttonFunction.bind(this));
+    btnShare.addEventListener("click", this._shareList.bind(this));
     btnClear.addEventListener("click", this.trashConfirm);
     btnTrashYes.addEventListener("click", this.reset);
     btnTrashNo.addEventListener("click", this.trashConfirm);
@@ -55,6 +57,7 @@ class App {
     list.addEventListener("click", this._removeProduct.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
     let products;
+
     this.buttonSign();
     this._calculateCost();
   }
@@ -67,6 +70,18 @@ class App {
     console.log(cost);
     listCost.innerHTML = "";
     listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
+  }
+
+  _shareList() {
+    let shareData = [];
+    this.#productsList.forEach((prod) => {
+      shareData.push(` ${prod.product} ${prod.quantity}`);
+    });
+    console.log(shareData.toString());
+    const x = {
+      text: shareData.toString(),
+    };
+    navigator.share(x);
   }
 
   trashConfirm() {

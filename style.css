@@ -96,6 +96,11 @@ html {
   text-decoration: line-through;
 }
 
+.list_menu_btns {
+  display: flex;
+  gap: 1rem;
+}
+
 /* Form  */
 .basket_icon {
   width: 4.8rem;
@@ -188,6 +193,29 @@ html {
   }
 
   /* Form mobile */
+
+  .basket_icon {
+    display: none;
+  }
+
+  .form_container {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    width: 100%;
+    padding: 1rem 2rem;
+    background-color: #ebc801;
+  }
+
+  .form {
+    display: grid;
+    grid-template-columns: 8fr 2fr 2fr 1fr;
+    font-size: 1.8rem;
+    align-items: center;
+    padding: 0 0;
+    row-gap: 2px;
+    font-size: 1.6rem;
+  }
 
   .form input {
     height: 4rem;
