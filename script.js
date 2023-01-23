@@ -2,12 +2,18 @@
 
 const form = document.querySelector(".form");
 const formContainer = document.querySelector(".form_container");
+const formConMyProd = document.querySelector(".form_container_myProducts");
+const formMyProducts = document.querySelector(".form_myProducts");
+const myProductsRow = document.querySelector(".myProducts_row");
 const btnForm = document.querySelector(".form__btn");
 const btnSort = document.querySelector(".nav__btn-sort");
 const btnShare = document.querySelector(".nav__btn-share");
 const btnClear = document.querySelector(".nav__btn-clear");
 const btnTrashYes = document.querySelector(".trash_confirm_yes");
 const btnTrashNo = document.querySelector(".trash_confirm_no");
+const btnMyProducts = document.querySelector(".nav__btn-myProducts");
+const btnAddMyProducts = document.querySelector(".myProducts_form_submit");
+const btnBack = document.querySelector(".myProducts_form_back");
 const trashConf = document.querySelector(".trash_confirm");
 const inputProduct = document.querySelector(".form_product");
 const inputQuantity = document.querySelector(".form_quantity");
@@ -15,9 +21,11 @@ const inputPrice = document.querySelector(".form_price");
 const list = document.querySelector(".list");
 const listRow = document.querySelector(".list__row");
 const inputId = document.getElementById("form-id");
-const listCost = document.querySelector(".list_cost");
+const listCost = document.querySelector(".list_cost_value");
+// const formCheckbox = document.querySelectorAll(".form_checkbox");
 let inputBought = document.getElementById("form-bought");
 let clicks = 0;
+
 const sortDesc = [
   "addition",
   "products ascending",
@@ -43,19 +51,24 @@ class ShoppingList {
 
 class App {
   #productsList = [];
+  #myProducts = [];
 
   constructor() {
     this._getLocalStorage();
+    this._getMyProductsLocal();
 
     btnForm.addEventListener("click", this._buttonFunction.bind(this));
     btnShare.addEventListener("click", this._shareList.bind(this));
     btnClear.addEventListener("click", this.trashConfirm);
     btnTrashYes.addEventListener("click", this.reset);
     btnTrashNo.addEventListener("click", this.trashConfirm);
+    btnMyProducts.addEventListener("click", this._showMyProducts.bind(this));
+    btnAddMyProducts.addEventListener("click", this._addMyProducts.bind(this));
     list.addEventListener("click", this._editProduct.bind(this));
     list.addEventListener("click", this._bought.bind(this));
     list.addEventListener("click", this._removeProduct.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
+    btnBack.addEventListener("click", this._renderProductList);
     let products;
 
     this.buttonSign();
@@ -67,21 +80,23 @@ class App {
     this.#productsList.forEach(
       (prod) => (cost = cost + prod.quantity * prod.price)
     );
-    console.log(cost);
+
     listCost.innerHTML = "";
     listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
   }
 
   _shareList() {
-    let shareData = [];
+    let shareDataArr = [];
+
     this.#productsList.forEach((prod) => {
-      shareData.push(` ${prod.product} ${prod.quantity}`);
+      shareDataArr.push(` ${prod.product} ${prod.quantity}`);
     });
-    console.log(shareData.toString());
-    const x = {
-      text: shareData.toString(),
+    const data = shareDataArr.toString().replaceAll(",", "\n");
+    const shareData = {
+      text: data,
     };
-    navigator.share(x);
+
+    navigator.share(shareData);
   }
 
   trashConfirm() {
@@ -103,6 +118,7 @@ class App {
 
   _clearForm() {
     inputProduct.value = inputQuantity.value = inputPrice.value = "";
+    editButtonActive = false;
   }
 
   _editProduct(e) {
@@ -134,6 +150,8 @@ class App {
 
     this.#productsList.splice(productsListId, 1);
     this._updateProductList();
+    this._clearForm();
+    this.buttonSign();
   }
 
   _saveProduct() {
@@ -173,13 +191,24 @@ class App {
     this.buttonSign();
   }
 
-  _addNewProduct() {
-    // get data from form
-    const product = inputProduct.value;
-    const quantity = +inputQuantity.value;
-    const price = +inputPrice.value;
+  _addNewProduct(productName) {
+    let product = "";
+    let quantity = 0;
+    let price = 0;
     const bought = false;
+    if (productName) {
+      product = productName;
+      quantity = 1;
+      price = 0;
+    } else {
+      // get data from form
 
+      product = inputProduct.value;
+      quantity = +inputQuantity.value;
+      price = +inputPrice.value;
+    }
+
+    // console.log(product, quantity, price, bought);
     // check if data is valid
     if (
       !product ||
@@ -195,9 +224,12 @@ class App {
     // create object
     const products = new ShoppingList(product, quantity, price, bought);
 
+    // check if product is on the list
+
     // add object to array
 
     this.#productsList.push(products);
+    this._saveMyProducts(products.product);
 
     // render product on list
     this._renderProductList(products);
@@ -206,10 +238,22 @@ class App {
     this._clearForm();
     inputProduct.focus();
 
-    // set local stprage
+    // set local storage
     this._setLocalStorage();
 
     this._calculateCost();
+  }
+
+  _saveMyProducts(product) {
+    console.log(this.#myProducts);
+    if (
+      !this.#myProducts.some(
+        (prod) => prod.toLowerCase() == product.toLowerCase()
+      )
+    )
+      this.#myProducts.push(product);
+    console.log(this.#myProducts);
+    localStorage.setItem("myProducts", JSON.stringify(this.#myProducts));
   }
 
   _renderProductList(products) {
@@ -247,6 +291,45 @@ class App {
     this.#productsList.forEach((prod) => this._renderProductList(prod));
     this._calculateCost();
     this._setLocalStorage();
+  }
+
+  _renderMyProducts(product) {
+    const html = `<div class="myProducts_row">
+    <input class="form_checkbox" type="checkbox" value="${product}" />
+    <input class="form_product" required name="product" type="text" value="${product}" readonly="readonly"/>
+    <div>`;
+
+    myProductsRow.insertAdjacentHTML("afterbegin", html);
+  }
+
+  _addMyProducts(e) {
+    e.preventDefault();
+    const formCheckbox = e.target.closest("form");
+
+    for (let i = 0; i < formCheckbox.length - 1; i++) {
+      // console.log(formCheckbox[i]);
+      let productName = formCheckbox[i].value;
+
+      if (formCheckbox[i].checked) {
+        this._addNewProduct(productName);
+      }
+    }
+    location.reload();
+    console.log("add my product to list");
+  }
+
+  _showMyProducts() {
+    // form.classList.add("hidden");
+    this._getMyProductsLocal();
+    // const myProductsData = JSON.parse(localStorage.getItem("myProducts"));
+    // if (!myProductsData) return;
+    // this.#myProducts = myProductsData;
+    list.innerHTML = "";
+    formConMyProd.classList.remove("hidden");
+    myProductsRow.innerHTML = "";
+
+    // this.#myProducts.forEach((prod) => this._updateProductList(prod));
+    this.#myProducts.forEach((prod) => this._renderMyProducts(prod));
   }
 
   _bought(e) {
@@ -310,9 +393,14 @@ class App {
     localStorage.setItem("products", JSON.stringify(this.#productsList));
   }
 
+  _getMyProductsLocal() {
+    const myProductsData = JSON.parse(localStorage.getItem("myProducts"));
+    if (!myProductsData) return;
+    this.#myProducts = myProductsData;
+  }
+
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("products"));
-
     if (!data) return;
     this.#productsList = data;
 
@@ -323,6 +411,7 @@ class App {
 
   reset() {
     localStorage.removeItem("products");
+    // localStorage.removeItem("myProducts");
     location.reload();
     trashConfirm();
   }

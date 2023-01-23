@@ -21,8 +21,14 @@
       <div class="list-container">
         <h1 class="list-title">Shopping List</h1>
         <div class="list-menu">
-          <div class="list_cost">Cost:</div>
+          <div class="list_cost">
+            Cost:
+            <span class="list_cost_value"></span>
+          </div>
           <div class="list_menu_btns">
+            <button class="btn nav__btn-myProducts">
+              <ion-icon name="list-outline"></ion-icon>
+            </button>
             <span class="sort_description"></span>
             <button class="btn nav__btn-sort">
               <ion-icon name="filter-outline"></ion-icon>
@@ -40,7 +46,7 @@
           <div>
             <ion-icon name="basket-outline" class="basket_icon"></ion-icon>
           </div>
-          <form class="form" name="addProduct">
+          <form class="form" id="main_form" name="addProduct">
             <label>Product</label>
             <label>Quantity</label>
             <label>Price</label>
@@ -58,6 +64,25 @@
             <input type="hidden" id="form-id" name="form-id" value="" />
             <input type="hidden" id="form-bought" name="bought" value="" />
             <button class="btn form__btn"></button>
+          </form>
+        </div>
+        <div class="form_container_myProducts hidden">
+          <form class="form_myProducts">
+            <div class="myProducts_row">
+              <input
+                class="form_checkbox"
+                type="checkbox"
+                value="product"
+              /><label>Product name</label>
+            </div>
+            <div>
+              <button class="myProducts_form_submit" type="submit">
+                Add to list
+              </button>
+              <button class="myProducts_form_back" type="submit">
+                <ion-icon name="return-up-back-outline"></ion-icon> Back
+              </button>
+            </div>
           </form>
         </div>
 
