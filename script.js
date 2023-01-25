@@ -4,6 +4,7 @@ const form = document.querySelector(".form");
 const formContainer = document.querySelector(".form_container");
 const formConMyProd = document.querySelector(".form_container_myProducts");
 const formMyProducts = document.querySelector(".form_myProducts");
+const formAlreadyAdded = document.querySelector(".alreadyAdded_confirm");
 const myProductsRow = document.querySelector(".myProducts_row");
 const btnForm = document.querySelector(".form__btn");
 const btnSort = document.querySelector(".nav__btn-sort");
@@ -11,6 +12,8 @@ const btnShare = document.querySelector(".nav__btn-share");
 const btnClear = document.querySelector(".nav__btn-clear");
 const btnTrashYes = document.querySelector(".trash_confirm_yes");
 const btnTrashNo = document.querySelector(".trash_confirm_no");
+const btnAddedYes = document.querySelector(".alreadyAddedconfirm_yes");
+const btnAddedNo = document.querySelector(".alreadyAddedconfirm_no");
 const btnMyProducts = document.querySelector(".nav__btn-myProducts");
 const btnAddMyProducts = document.querySelector(".myProducts_form_submit");
 const btnBack = document.querySelector(".myProducts_form_back");
@@ -25,6 +28,7 @@ const listCost = document.querySelector(".list_cost_value");
 const checkboxSelectAll = document.querySelector(".form_checkbox_selectall");
 // const formCheckbox = document.querySelectorAll(".form_checkbox");
 let inputBought = document.getElementById("form-bought");
+let hiddenProduct = document.getElementById("hiddenProduct");
 let clicks = 0;
 
 const sortDesc = [
@@ -63,6 +67,8 @@ class App {
     btnClear.addEventListener("click", this.trashConfirm);
     btnTrashYes.addEventListener("click", this.reset);
     btnTrashNo.addEventListener("click", this.trashConfirm);
+    // btnAddedYes.addEventListener("click", this._addProduct.bind(this));
+    btnAddedNo.addEventListener("click", this.alreadyAddedHidde);
     btnMyProducts.addEventListener("click", this._showMyProducts.bind(this));
     btnAddMyProducts.addEventListener("click", this._addMyProducts.bind(this));
     list.addEventListener("click", this._editProduct.bind(this));
@@ -118,6 +124,10 @@ class App {
 
   trashConfirm() {
     trashConf.classList.toggle("hidden");
+  }
+
+  alreadyAddedHidde() {
+    formAlreadyAdded.classList.toggle("hidden");
   }
 
   buttonSign() {
@@ -225,7 +235,6 @@ class App {
       price = +inputPrice.value;
     }
 
-    // console.log(product, quantity, price, bought);
     // check if data is valid
     if (
       !product ||
@@ -241,10 +250,7 @@ class App {
     // create object
     const products = new ShoppingList(product, quantity, price, bought);
 
-    // check if product is on the list
-
     // add object to array
-
     this.#productsList.push(products);
     this._saveMyProducts(products.product);
 
@@ -331,33 +337,36 @@ class App {
     }
 
     this._updateProductList();
+    checkboxSelectAll.checked = false;
   }
 
   _showMyProducts() {
-    // form.classList.add("hidden");
     this._getMyProductsLocal();
-    // const myProductsData = JSON.parse(localStorage.getItem("myProducts"));
-    // if (!myProductsData) return;
-    // this.#myProducts = myProductsData;
     list.innerHTML = "";
     formConMyProd.classList.remove("hidden");
     formMyProducts.innerHTML = "";
 
-    // this.#myProducts.forEach((prod) => this._updateProductList(prod));
     this.#myProducts.forEach((prod) => this._renderMyProducts(prod));
   }
 
   _checkboxSelectAll(e) {
-    const selectAll = e.target;
     let formCheckbox = e.target.parentNode.nextElementSibling;
-    console.log(formCheckbox);
+    formCheckbox.addEventListener("change", function () {
+      for (let i = 0; i < formCheckbox.length; i++) {
+        if (formCheckbox[i].checked === false) {
+          checkboxSelectAll.checked = false;
+          break;
+        } else {
+          checkboxSelectAll.checked = true;
+        }
+      }
+    });
+
     if (e.target.checked) {
-      console.log("all checked");
       for (let i = 0; i < formCheckbox.length; i++) {
         formCheckbox[i].checked = true;
       }
     } else {
-      console.log("not checked");
       for (let i = 0; i < formCheckbox.length; i++) {
         formCheckbox[i].checked = false;
       }

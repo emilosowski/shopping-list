@@ -156,7 +156,8 @@ html {
   grid-column: 4 / 6;
 }
 
-.trash_confirm {
+.trash_confirm,
+.alreadyAdded_confirm {
   position: absolute;
   background-color: #dfdfdf;
   padding: 2rem 2rem;
@@ -167,14 +168,16 @@ html {
   z-index: 1000;
 }
 
-.trash_confirm_btn_container {
+.trash_confirm_btn_container,
+.alreadyAddedconfirm_btn_container {
   display: flex;
   justify-content: center;
   gap: 5rem;
   margin-top: 2rem;
 }
 
-.btn_trash_confirm {
+.btn_trash_confirm,
+.btn_alreadyAddedconfirm {
   width: 8rem;
   height: 4rem;
 }
@@ -244,6 +247,10 @@ html {
 
   .form__btn {
     height: 4rem;
+  }
+
+  .sort_description_box {
+    margin-left: 23rem;
   }
 }
 
