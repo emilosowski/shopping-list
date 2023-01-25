@@ -41,6 +41,17 @@ html {
   align-items: center;
 }
 
+.sort_description_container {
+  background-color: #000;
+  color: #fff;
+  text-align: left;
+}
+
+.sort_description_box {
+  margin-left: 33rem;
+  padding-bottom: 1rem;
+}
+
 .list_cost {
   font-size: 1.6rem;
 }
@@ -54,7 +65,7 @@ html {
 .list {
   max-height: 60rem;
   margin-top: 2rem;
-  padding: 0 2rem;
+  padding: 0 1rem 4rem 2rem;
   overflow-y: scroll;
 }
 .list__row {
@@ -104,12 +115,10 @@ html {
 }
 
 .form_container {
-  display: grid;
-  grid-template-columns: 2fr 14fr;
-  align-items: flex-start;
   width: 100%;
   padding: 1rem 2rem;
   background-color: #ebc801;
+  margin-bottom: 2rem;
 }
 
 .form_container label {
@@ -118,7 +127,7 @@ html {
 
 .form {
   display: grid;
-  grid-template-columns: 8fr 2fr 2fr 1fr 1fr;
+  grid-template-columns: 8fr 2fr 2fr 1fr;
   column-gap: 1rem;
   align-items: center;
   font-size: 1.8rem;
@@ -170,10 +179,6 @@ html {
   height: 4rem;
 }
 
-.mobile_form_container {
-  display: none;
-}
-
 .form_myProducts {
   display: flex;
   flex-direction: column;
@@ -182,24 +187,34 @@ html {
   font-size: 1.8rem;
 }
 
-.myProducts_row {
-  margin-bottom: 0.5rem;
-}
-
-.form_product {
+.label_row {
   border: none;
   background-color: #f7f7f7;
   padding: 1rem;
+  margin-bottom: 0.5rem;
+  margin-right: 2rem;
 }
 
 .span_myProducts {
   margin: 1rem auto;
 }
 
+.form_btn_box {
+  margin-top: 2rem;
+  padding-left: 2rem;
+}
+
 .myProducts_form_submit,
 .myProducts_form_back {
   width: 8rem;
   height: 4rem;
+  margin-right: 2rem;
+}
+
+.label_selectall {
+  padding: 2rem;
+  font-size: 1.6rem;
+  color: #b98800;
 }
 
 @media (max-width: 600px) {
@@ -221,25 +236,6 @@ html {
 
   .basket_icon {
     display: none;
-  }
-
-  .form_container {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: flex-start;
-    width: 100%;
-    padding: 1rem 2rem;
-    background-color: #ebc801;
-  }
-
-  .form {
-    display: grid;
-    grid-template-columns: 8fr 2fr 2fr 1fr;
-    font-size: 1.8rem;
-    align-items: center;
-    padding: 0 0;
-    row-gap: 2px;
-    font-size: 1.6rem;
   }
 
   .form input {

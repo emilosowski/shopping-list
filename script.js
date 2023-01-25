@@ -22,6 +22,7 @@ const list = document.querySelector(".list");
 const listRow = document.querySelector(".list__row");
 const inputId = document.getElementById("form-id");
 const listCost = document.querySelector(".list_cost_value");
+const checkboxSelectAll = document.querySelector(".form_checkbox_selectall");
 // const formCheckbox = document.querySelectorAll(".form_checkbox");
 let inputBought = document.getElementById("form-bought");
 let clicks = 0;
@@ -68,11 +69,24 @@ class App {
     list.addEventListener("click", this._bought.bind(this));
     list.addEventListener("click", this._removeProduct.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
-    btnBack.addEventListener("click", this._renderProductList);
+    btnBack.addEventListener("click", this._updateProductList.bind(this));
+    inputQuantity.addEventListener("change", this._form2Decimal);
+    inputPrice.addEventListener("change", this._form2Decimal);
+    checkboxSelectAll.addEventListener(
+      "change",
+      this._checkboxSelectAll.bind(this)
+    );
     let products;
 
     this.buttonSign();
     this._calculateCost();
+  }
+
+  _form2Decimal(e) {
+    const el = e.target;
+    let elValue = el.value;
+    elValue = Math.trunc(parseFloat(elValue * 100)) / 100;
+    el.value = elValue;
   }
 
   _calculateCost() {
@@ -82,7 +96,10 @@ class App {
     );
 
     listCost.innerHTML = "";
-    listCost.insertAdjacentHTML("beforeend", `<span> ${cost} $</span>`);
+    listCost.insertAdjacentHTML(
+      "beforeend",
+      `<span> ${cost.toFixed(2)} $</span>`
+    );
   }
 
   _shareList() {
@@ -245,14 +262,13 @@ class App {
   }
 
   _saveMyProducts(product) {
-    console.log(this.#myProducts);
     if (
       !this.#myProducts.some(
         (prod) => prod.toLowerCase() == product.toLowerCase()
       )
     )
       this.#myProducts.push(product);
-    console.log(this.#myProducts);
+
     localStorage.setItem("myProducts", JSON.stringify(this.#myProducts));
   }
 
@@ -287,6 +303,8 @@ class App {
   }
 
   _updateProductList(products) {
+    if (!formConMyProd.classList.contains("hidden"))
+      formConMyProd.classList.add("hidden");
     list.innerHTML = "";
     this.#productsList.forEach((prod) => this._renderProductList(prod));
     this._calculateCost();
@@ -294,28 +312,25 @@ class App {
   }
 
   _renderMyProducts(product) {
-    const html = `<div class="myProducts_row">
-    <input class="form_checkbox" type="checkbox" value="${product}" />
-    <input class="form_product" required name="product" type="text" value="${product}" readonly="readonly"/>
-    <div>`;
+    const html = `
+    <label class="label_row"><input class="form_checkbox" type="checkbox" value="${product}" /> ${product}</label>
+    `;
 
-    myProductsRow.insertAdjacentHTML("afterbegin", html);
+    formMyProducts.insertAdjacentHTML("afterbegin", html);
   }
 
   _addMyProducts(e) {
     e.preventDefault();
-    const formCheckbox = e.target.closest("form");
 
-    for (let i = 0; i < formCheckbox.length - 1; i++) {
-      // console.log(formCheckbox[i]);
-      let productName = formCheckbox[i].value;
-
-      if (formCheckbox[i].checked) {
+    const productRow = e.target.parentNode.previousElementSibling;
+    for (let i = 0; i < productRow.length; i++) {
+      let productName = productRow[i].value;
+      if (productRow[i].checked) {
         this._addNewProduct(productName);
       }
     }
-    location.reload();
-    console.log("add my product to list");
+
+    this._updateProductList();
   }
 
   _showMyProducts() {
@@ -326,10 +341,27 @@ class App {
     // this.#myProducts = myProductsData;
     list.innerHTML = "";
     formConMyProd.classList.remove("hidden");
-    myProductsRow.innerHTML = "";
+    formMyProducts.innerHTML = "";
 
     // this.#myProducts.forEach((prod) => this._updateProductList(prod));
     this.#myProducts.forEach((prod) => this._renderMyProducts(prod));
+  }
+
+  _checkboxSelectAll(e) {
+    const selectAll = e.target;
+    let formCheckbox = e.target.parentNode.nextElementSibling;
+    console.log(formCheckbox);
+    if (e.target.checked) {
+      console.log("all checked");
+      for (let i = 0; i < formCheckbox.length; i++) {
+        formCheckbox[i].checked = true;
+      }
+    } else {
+      console.log("not checked");
+      for (let i = 0; i < formCheckbox.length; i++) {
+        formCheckbox[i].checked = false;
+      }
+    }
   }
 
   _bought(e) {
@@ -350,6 +382,8 @@ class App {
   }
 
   _sortList(e) {
+    if (!formConMyProd.classList.contains("hidden"))
+      formConMyProd.classList.add("hidden");
     e.preventDefault();
     // 0 - sorted by id addition order
     // 1 - sorted by product name ascending
