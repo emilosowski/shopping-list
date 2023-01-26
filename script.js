@@ -26,6 +26,7 @@ const listRow = document.querySelector(".list__row");
 const inputId = document.getElementById("form-id");
 const listCost = document.querySelector(".list_cost_value");
 const checkboxSelectAll = document.querySelector(".form_checkbox_selectall");
+const titleAddedConfirm = document.querySelector(".alreadyAdded_confirm_title");
 // const formCheckbox = document.querySelectorAll(".form_checkbox");
 let inputBought = document.getElementById("form-bought");
 let hiddenProduct = document.getElementById("hiddenProduct");
@@ -68,7 +69,7 @@ class App {
     btnTrashYes.addEventListener("click", this.reset);
     btnTrashNo.addEventListener("click", this.trashConfirm);
     // btnAddedYes.addEventListener("click", this._addProduct.bind(this));
-    btnAddedNo.addEventListener("click", this.alreadyAddedHidde);
+    // btnAddedNo.addEventListener("click", this.alreadyAddedHidde);
     btnMyProducts.addEventListener("click", this._showMyProducts.bind(this));
     btnAddMyProducts.addEventListener("click", this._addMyProducts.bind(this));
     list.addEventListener("click", this._editProduct.bind(this));
@@ -218,7 +219,7 @@ class App {
     this.buttonSign();
   }
 
-  _addNewProduct(productName) {
+  async _addNewProduct(productName) {
     let product = "";
     let quantity = 0;
     let price = 0;
@@ -247,24 +248,119 @@ class App {
         "Product name is required, quantity and price have to be positive numbers or 0"
       );
 
-    // create object
-    const products = new ShoppingList(product, quantity, price, bought);
+    // check if product is on the list
+    /*
+    if (
+      this.#productsList.some(
+        (prod) => prod.product.toLowerCase() == product.toLowerCase()
+      )
+    ) {
+      if (
+        window.confirm(
+          `The product "${product}" is already on the list. Add anyway?`
+        )
+      ) {
+        // create object
+        const products = new ShoppingList(product, quantity, price, bought);
 
-    // add object to array
-    this.#productsList.push(products);
-    this._saveMyProducts(products.product);
+        // add object to array
+        this.#productsList.push(products);
+        this._saveMyProducts(products.product);
 
-    // render product on list
-    this._renderProductList(products);
+        // render product on list
+        this._renderProductList(products);
 
-    // empty imputs
-    this._clearForm();
-    inputProduct.focus();
+        // empty imputs
+        this._clearForm();
+        inputProduct.focus();
 
-    // set local storage
-    this._setLocalStorage();
+        // set local storage
+        this._setLocalStorage();
 
-    this._calculateCost();
+        this._calculateCost();
+      }
+    } else {
+      const products = new ShoppingList(product, quantity, price, bought);
+
+      // add object to array
+      this.#productsList.push(products);
+      this._saveMyProducts(products.product);
+
+      // render product on list
+      this._renderProductList(products);
+
+      // empty imputs
+      this._clearForm();
+      inputProduct.focus();
+
+      // set local storage
+      this._setLocalStorage();
+
+      this._calculateCost();
+    }
+*/
+
+    if (
+      this.#productsList.some(
+        (prod) => prod.product.toLowerCase() == product.toLowerCase()
+      )
+    ) {
+      this.alreadyAddedHidde();
+      titleAddedConfirm.textContent = `The product "${product}" is already on the list. Add anyway?`;
+      try {
+        await new Promise((resolve, reject) => {
+          btnAddedYes.addEventListener("click", function () {
+            resolve();
+          });
+
+          btnAddedNo.addEventListener("click", function () {
+            reject();
+          });
+        });
+
+        // create object
+        const products = new ShoppingList(product, quantity, price, bought);
+
+        this.alreadyAddedHidde();
+
+        // add object to array
+        this.#productsList.push(products);
+        this._saveMyProducts(products.product);
+
+        // render product on list
+        this._renderProductList(products);
+
+        // empty imputs
+        this._clearForm();
+        inputProduct.focus();
+
+        // set local storage
+        this._setLocalStorage();
+
+        this._calculateCost();
+      } catch {
+        this.alreadyAddedHidde();
+        this._clearForm();
+      }
+    } else {
+      const products = new ShoppingList(product, quantity, price, bought);
+
+      // add object to array
+      this.#productsList.push(products);
+      this._saveMyProducts(products.product);
+
+      // render product on list
+      this._renderProductList(products);
+
+      // empty imputs
+      this._clearForm();
+      inputProduct.focus();
+
+      // set local storage
+      this._setLocalStorage();
+
+      this._calculateCost();
+    }
   }
 
   _saveMyProducts(product) {
@@ -319,20 +415,20 @@ class App {
 
   _renderMyProducts(product) {
     const html = `
-    <label class="label_row"><input class="form_checkbox" type="checkbox" value="${product}" /> ${product}</label>
+    <label class="label_row"><input class="form_checkbox" type="checkbox" value="${product}" /> ${product} </label>
     `;
 
     formMyProducts.insertAdjacentHTML("afterbegin", html);
   }
 
-  _addMyProducts(e) {
+  async _addMyProducts(e) {
     e.preventDefault();
 
     const productRow = e.target.parentNode.previousElementSibling;
     for (let i = 0; i < productRow.length; i++) {
       let productName = productRow[i].value;
       if (productRow[i].checked) {
-        this._addNewProduct(productName);
+        await this._addNewProduct(productName);
       }
     }
 
@@ -346,7 +442,15 @@ class App {
     formConMyProd.classList.remove("hidden");
     formMyProducts.innerHTML = "";
 
-    this.#myProducts.forEach((prod) => this._renderMyProducts(prod));
+    this.#myProducts
+      .sort((a, b) =>
+        a.toUpperCase() < b.toUpperCase()
+          ? 1
+          : a.toUpperCase() > b.toUpperCase()
+          ? -1
+          : 0
+      )
+      .forEach((prod) => this._renderMyProducts(prod));
   }
 
   _checkboxSelectAll(e) {

@@ -63,7 +63,7 @@ html {
 }
 
 .list {
-  max-height: 60rem;
+  max-height: 54rem;
   margin-top: 2rem;
   padding: 0 1rem 4rem 2rem;
   overflow-y: scroll;
@@ -159,9 +159,9 @@ html {
 .trash_confirm,
 .alreadyAdded_confirm {
   position: absolute;
-  background-color: #dfdfdf;
+  background-color: #fff;
   padding: 2rem 2rem;
-  border-radius: 1rem;
+  border-radius: 2rem;
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -178,16 +178,27 @@ html {
 
 .btn_trash_confirm,
 .btn_alreadyAddedconfirm {
+  border: none;
+  border-radius: 2rem;
   width: 8rem;
   height: 4rem;
 }
 
+.btn_trash_confirm:hover,
+.btn_alreadyAddedconfirm:hover,
+.btn_trash_confirm:active,
+.btn_alreadyAddedconfirm:active {
+  background-color: #ebc801;
+}
+
 .form_myProducts {
+  height: 45rem;
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
   padding-left: 2rem;
   font-size: 1.8rem;
+  overflow-y: scroll;
 }
 
 .label_row {
@@ -196,6 +207,10 @@ html {
   padding: 1rem;
   margin-bottom: 0.5rem;
   margin-right: 2rem;
+}
+.btn_remove_myproduct {
+  width: 2rem;
+  height: 2rem;
 }
 
 .span_myProducts {
