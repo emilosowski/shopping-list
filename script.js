@@ -338,6 +338,7 @@ class App {
         this._setLocalStorage();
 
         this._calculateCost();
+        this._updateProductList();
       } catch {
         this.alreadyAddedHidde();
         this._clearForm();
@@ -360,6 +361,7 @@ class App {
       this._setLocalStorage();
 
       this._calculateCost();
+      this._updateProductList();
     }
   }
 

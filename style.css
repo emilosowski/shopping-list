@@ -267,6 +267,14 @@ html {
   .sort_description_box {
     margin-left: 23rem;
   }
+
+  .list {
+    max-height: 41rem;
+  }
+
+  .form_myProducts {
+    height: 32rem;
+  }
 }
 
 .hidden {
